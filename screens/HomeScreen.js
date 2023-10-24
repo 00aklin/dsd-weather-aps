@@ -6,20 +6,41 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
-import { MagnifyingGlassIcon, SunIcon } from "react-native-heroicons/solid";
+import { MagnifyingGlassIcon } from "react-native-heroicons/solid";
 
 import { StatusBar } from "expo-status-bar";
 import { Wind } from "../components/icons/Wind.";
 import { Drop } from "../components/icons/Drop";
 import { DailyForecast } from "../components/DailyForecast";
+import { fetchForecastDays } from "../api/weather";
+import { useEffect, useState } from "react";
+import { weatherImagesDay, weatherImagesNight } from "../api/constants";
 
 const imageUri =
   "https://images.unsplash.com/photo-1557683304-673a23048d34?auto=format&fit=crop&q=60&w=300&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGdyYWRpZW50fGVufDB8MXwwfHx8MA%3D%3D";
 
 export function HomeScreen() {
+  const [loadingData, setLoadingData] = useState(false);
+  const [weatherData, setWeatherData] = useState({});
+
+  // useEffect(() => {
+  //   setLoadingData(true);
+  //   fetchForecastDays()
+  //     .then((data) => setWeatherData(data))
+  //     .finally(() => setLoadingData(false));
+  // }, []);
+
+  const { current, location } = weatherData;
+
+  if (loadingData) {
+    return (
+      <View className="flex-1">
+        <Text>Loading ...</Text>
+      </View>
+    );
+  }
   return (
     <View className="flex-1 relative bg-black">
       <Image
@@ -48,13 +69,20 @@ export function HomeScreen() {
         </TouchableWithoutFeedback>
 
         <View className="flex-1 justify-between items-center space-y-4 py-3">
-          <Text className="text-white text-lg">21/10/2023 - Sabado</Text>
-          <SunIcon size="106" color="white" />
+          <Text className="text-white text-lg">
+            {location?.name}, {location?.country}
+          </Text>
+
+          {current?.is_day === 1
+            ? weatherImagesDay[current?.condition?.text] ??
+              weatherImagesDay["other"]
+            : weatherImagesNight[current?.condition?.text] ??
+              weatherImagesDay["other"]}
 
           <View className="flex-col items-center space-y-2">
-            <Text className="text-white text-5xl">23&#176;</Text>
+            <Text className="text-white text-5xl">{current?.temp_c}&#176;</Text>
             <Text className="text-white text-lg tracking-widest">
-              Partly cloudy
+              {current?.condition?.text}
             </Text>
           </View>
 
