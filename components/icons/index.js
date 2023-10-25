@@ -13,3 +13,6 @@ export { RainThunder } from "./RainThunder";
 export { Moon } from "./Moon";
 export { HeavyRainAndMoon } from "./HeavyRainAndMoon";
 export { RainAndMoon } from "./RainAndMoon";
+export { Umbrella } from "./Umbrella";
+export { Thermometer } from "./Thermometer";
+export { PartlyCloudyNight } from "./PartlyCloudyNight";
