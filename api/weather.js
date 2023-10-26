@@ -1,17 +1,15 @@
 import axios from "axios";
-import { API_KEY } from "./constants";
+import { API_URL } from "@env";
 
 /**
  *  params: { location: string }
  */
-const forecastEndPoint = (params) =>
-  `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${params.location}&days=7&aqi=no&alerts=no&lang=pt`;
+const forecastEndPoint = (params) => `${API_URL}/forecast/${params.location}`;
 
 /**
  *  params: { search: string }
  */
-const searchEndPoint = (params) =>
-  `https://api.weatherapi.com/v1/search.json?key=${API_KEY}&q=${params.search}`;
+const searchEndPoint = (params) => `${API_URL}/search/${params.search}`;
 
 const apiCall = async (endPoint) => {
   const options = {

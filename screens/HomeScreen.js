@@ -6,7 +6,6 @@ import {
   TextInput,
   ScrollView,
   TouchableWithoutFeedback,
-  Keyboard,
   TouchableOpacity,
 } from "react-native";
 import { CalendarDaysIcon, MapPinIcon } from "react-native-heroicons/solid";
@@ -37,14 +36,14 @@ export function HomeScreen() {
   useEffect(() => {
     setLoadingData(true);
     fetchForecastDays({ location: "sao-paulo" })
-      .then((data) => setWeatherData(data))
+      .then((data) => setWeatherData(data.data))
       .finally(() => setLoadingData(false));
   }, []);
 
   const handleSelectLocation = useCallback((location) => {
     setShowList(false);
     fetchForecastDays({ location: location?.name }).then((data) =>
-      setWeatherData(data)
+      setWeatherData(data.data)
     );
   }, []);
 
@@ -52,12 +51,12 @@ export function HomeScreen() {
     setShowList((prev) => !prev);
   }, []);
 
-  const { current, location, forecast } = weatherData;
+  const { current, location, forecast } = weatherData ?? {};
 
   const handleSearch = useCallback((search) => {
     fetchSearchLocations({
       search,
-    }).then((data) => setSearchList(data));
+    }).then((data) => setSearchList(data.data));
   }, []);
 
   const handleOnSearchDebounce = useCallback(debounce(handleSearch, 1500), []);
@@ -92,7 +91,7 @@ export function HomeScreen() {
                   <View className="flex-row items-center rounded-full bg-white">
                     <TextInput
                       returnKeyType="done"
-                      placeholder="Pesquisar região (zip-code, city-name)"
+                      placeholder="Pesquisar região"
                       className="p-3 flex-1"
                       onChangeText={handleOnSearchDebounce}
                       onFocus={() => {
@@ -106,18 +105,18 @@ export function HomeScreen() {
 
             {showList && (
               <View className="absolute flex-col p-2 bg-white/10 rounded-md max-h-32 top-14 w-full z-50">
-                {searchList.length === 0 && (
+                {searchList?.length === 0 && (
                   <Text className="text-center p-3 bg-gray-300 rounded-md">
                     Nenhum resultado encontrado
                   </Text>
                 )}
 
-                {searchList.length > 0 && (
+                {searchList?.length > 0 && (
                   <ScrollView
                     nestedScrollEnabled={false}
                     contentContainerStyle={{ gap: 12 }}
                   >
-                    {searchList.map((item) => {
+                    {searchList?.map((item) => {
                       return (
                         <TouchableOpacity
                           key={item.id}
